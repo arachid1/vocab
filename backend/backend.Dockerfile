@@ -19,6 +19,9 @@ COPY . .
 # Expose the port used by Django
 EXPOSE 8000
 
-# # Run the Django development server (for local development only)
-CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["sleep", "infinity"]
+# Add the startup script to the container
+COPY startup_script.sh /app/startup_script.sh
+RUN chmod +x /app/startup_script.sh
+
+# Run the startup script and then start the Django development server
+CMD ["/bin/sh", "-c", "/app/startup_script.sh && poetry run python manage.py runserver 0.0.0.0:8000"]
